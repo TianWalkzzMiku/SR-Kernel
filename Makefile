@@ -346,6 +346,7 @@ NM		= $(CROSS_COMPILE)nm
 STRIP		= $(CROSS_COMPILE)strip
 OBJCOPY		= $(CROSS_COMPILE)objcopy
 OBJDUMP		= $(CROSS_COMPILE)objdump
+LDLLD		= ld.lld
 AWK		= awk
 GENKSYMS	= scripts/genksyms/genksyms
 INSTALLKERNEL  := installkernel
@@ -628,6 +629,30 @@ CLANG_FLAGS    += $(call cc-option, -Wno-misleading-indentation)
 CLANG_FLAGS    += $(call cc-option, -Wno-bool-operation)
 KBUILD_CFLAGS	+= $(CLANG_FLAGS)
 KBUILD_AFLAGS	+= $(CLANG_FLAGS)
+ifeq ($(ld-name),lld)
+KBUILD_CFLAGS += -fuse-ld=lld
+endif
+KBUILD_CPPFLAGS += -Qunused-arguments
+endif
+
+ifdef CONFIG_LD_LLD
+LD		:= $(LDLLD)
+endif
+
+ifdef CONFIG_LTO
+LTO_CFLAGS    := -flto -flto=jobserver -fno-fat-lto-objects \
+                 -fuse-linker-plugin -fwhole-program
+KBUILD_CFLAGS += $(LTO_CFLAGS) --param=max-inline-insns-auto=1000
+LTO_LDFLAGS   := $(LTO_CFLAGS) -Wno-lto-type-mismatch -Wno-psabi \
+                 -Wno-stringop-overflow -flinker-output=nolto-rel
+LDFINAL       := $(CONFIG_SHELL) $(srctree)/scripts/gcc-ld $(LTO_LDFLAGS)
+AR            := $(CROSS_COMPILE)gcc-ar
+NM            := $(CROSS_COMPILE)gcc-nm
+DISABLE_LTO   := -fno-lto
+export DISABLE_LTO LDFINAL
+else
+LDFINAL       := $(LD)
+export LDFINAL
 endif
 
 # The arch Makefile can set ARCH_{CPP,A,C}FLAGS to override the default
