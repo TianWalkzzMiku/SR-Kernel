@@ -65,6 +65,39 @@ static remote_spinlock_t scm_handoff_lock;
 
 struct lpm_cluster *lpm_root_node;
 
+#define MAXSAMPLES 5
+
+static bool lpm_prediction = true;
+module_param_named(lpm_prediction,
+	lpm_prediction, bool, S_IRUGO | S_IWUSR | S_IWGRP);
+
+static uint32_t ref_stddev = 100;
+module_param_named(
+	ref_stddev, ref_stddev, uint, S_IRUGO | S_IWUSR | S_IWGRP
+);
+
+static uint32_t tmr_add = 100;
+module_param_named(
+	tmr_add, tmr_add, uint, S_IRUGO | S_IWUSR | S_IWGRP
+);
+
+static uint32_t ref_premature_cnt = 1;
+
+static bool cluster_use_deepest_state;
+module_param(cluster_use_deepest_state, bool, 0664);
+
+struct lpm_history {
+	uint32_t resi[MAXSAMPLES];
+	int mode[MAXSAMPLES];
+	int nsamp;
+	uint32_t hptr;
+	uint32_t hinvalid;
+	uint32_t htmr_wkup;
+	int64_t stime;
+};
+
+static DEFINE_PER_CPU(struct lpm_history, hist);
+
 static DEFINE_PER_CPU(struct lpm_cluster*, cpu_cluster);
 static bool suspend_in_progress;
 static struct hrtimer lpm_hrtimer;
@@ -118,6 +151,11 @@ void lpm_suspend_wake_time(uint64_t wakeup_time)
 		suspend_wake_time = wakeup_time;
 }
 EXPORT_SYMBOL(lpm_suspend_wake_time);
+
+void lpm_cluster_use_deepest_state(bool enable)
+{
+	cluster_use_deepest_state = enable;
+}
 
 static uint32_t least_cluster_latency(struct lpm_cluster *cluster,
 					struct latency_level *lat_level)
@@ -501,7 +539,184 @@ static uint64_t get_cluster_sleep_time(struct lpm_cluster *cluster,
 		return 0;
 }
 
-static int cluster_select(struct lpm_cluster *cluster, bool from_idle)
+static int cluster_predict(struct lpm_cluster *cluster,
+				uint32_t *pred_us)
+{
+	int i, j;
+	int ret = 0;
+	struct cluster_history *history = &cluster->history;
+	int64_t cur_time = ktime_to_us(ktime_get());
+
+	if (!lpm_prediction)
+		return 0;
+
+	if (history->hinvalid) {
+		history->hinvalid = 0;
+		history->htmr_wkup = 1;
+		history->flag = 0;
+		return ret;
+	}
+
+	if (history->nsamp == MAXSAMPLES) {
+		for (i = 0; i < MAXSAMPLES; i++) {
+			if ((cur_time - history->stime[i])
+					> CLUST_SMPL_INVLD_TIME)
+				history->nsamp--;
+		}
+	}
+
+	if (history->nsamp < MAXSAMPLES) {
+		history->flag = 0;
+		return ret;
+	}
+
+	if (history->flag == 2)
+		history->flag = 0;
+
+	if (history->htmr_wkup != 1) {
+		uint64_t total = 0;
+
+		if (history->flag == 1) {
+			for (i = 0; i < MAXSAMPLES; i++)
+				total += history->resi[i];
+			do_div(total, MAXSAMPLES);
+			*pred_us = total;
+			return 2;
+		}
+
+		for (j = 1; j < cluster->nlevels; j++) {
+			uint32_t failed = 0;
+
+			total = 0;
+			for (i = 0; i < MAXSAMPLES; i++) {
+				if ((history->mode[i] == j) && (history->resi[i]
+				< cluster->levels[j].pwr.min_residency)) {
+					failed++;
+					total += history->resi[i];
+				}
+			}
+
+			if (failed > (MAXSAMPLES-2)) {
+				do_div(total, failed);
+				*pred_us = total;
+				history->flag = 1;
+				return 1;
+			}
+		}
+	}
+
+	return ret;
+}
+
+static void update_cluster_history_time(struct cluster_history *history,
+						int idx, uint64_t start)
+{
+	history->entry_idx = idx;
+	history->entry_time = start;
+}
+
+static void update_cluster_history(struct cluster_history *history, int idx)
+{
+	uint32_t tmr = 0;
+	uint32_t residency = 0;
+	struct lpm_cluster *cluster =
+			container_of(history, struct lpm_cluster, history);
+
+	if (!lpm_prediction)
+		return;
+
+	if ((history->entry_idx == -1) || (history->entry_idx == idx)) {
+		residency = ktime_to_us(ktime_get()) - history->entry_time;
+		history->stime[history->hptr] = history->entry_time;
+	} else
+		return;
+
+	if (history->htmr_wkup) {
+		if (!history->hptr)
+			history->hptr = MAXSAMPLES-1;
+		else
+			history->hptr--;
+
+		history->resi[history->hptr] += residency;
+
+		history->htmr_wkup = 0;
+		tmr = 1;
+	} else {
+		history->resi[history->hptr] = residency;
+	}
+
+	history->mode[history->hptr] = idx;
+
+	history->entry_idx = INT_MIN;
+	history->entry_time = 0;
+
+	if (history->nsamp < MAXSAMPLES)
+		history->nsamp++;
+
+	trace_cluster_pred_hist(cluster->cluster_name,
+		history->mode[history->hptr], history->resi[history->hptr],
+		history->hptr, tmr);
+
+	(history->hptr)++;
+
+	if (history->hptr >= MAXSAMPLES)
+		history->hptr = 0;
+}
+
+static void clear_cl_history_each(struct cluster_history *history)
+{
+	int i;
+
+	for (i = 0; i < MAXSAMPLES; i++) {
+		history->resi[i]  = 0;
+		history->mode[i] = -1;
+		history->stime[i] = 0;
+	}
+	history->hptr = 0;
+	history->nsamp = 0;
+	history->flag = 0;
+	history->hinvalid = 0;
+	history->htmr_wkup = 0;
+}
+
+static void clear_cl_predict_history(void)
+{
+	struct lpm_cluster *cluster = lpm_root_node;
+	struct list_head *list;
+
+	if (!lpm_prediction)
+		return;
+
+	clear_cl_history_each(&cluster->history);
+
+	list_for_each(list, &cluster->child) {
+		struct lpm_cluster *n;
+
+		n = list_entry(list, typeof(*n), list);
+		clear_cl_history_each(&n->history);
+	}
+}
+
+static int cluster_select_deepest(struct lpm_cluster *cluster)
+{
+	int i;
+
+	for (i = cluster->nlevels - 1; i >= 0; i--) {
+		struct lpm_cluster_level *level = &cluster->levels[i];
+
+		if (level->notify_rpm) {
+			if (level->notify_rpm && msm_rpm_waiting_for_ack())
+				continue;
+		}
+
+		break;
+	}
+
+	return i;
+}
+
+static int cluster_select(struct lpm_cluster *cluster, bool from_idle,
+							int *ispred)
 {
 	int best_level = -1;
 	int i;
@@ -512,7 +727,24 @@ static int cluster_select(struct lpm_cluster *cluster, bool from_idle)
 	if (!cluster)
 		return -EINVAL;
 
-	sleep_us = (uint32_t)get_cluster_sleep_time(cluster, NULL, from_idle);
+	if (cluster_use_deepest_state)
+		return cluster_select_deepest(cluster);
+
+	sleep_us = (uint32_t)get_cluster_sleep_time(cluster, NULL,
+						from_idle, &cpupred_us);
+
+	if (from_idle) {
+		pred_mode = cluster_predict(cluster, &pred_us);
+
+		if (cpupred_us && pred_mode && (cpupred_us < pred_us))
+			pred_us = cpupred_us;
+
+		if (pred_us && pred_mode && (pred_us < sleep_us))
+			predicted = 1;
+
+		if (predicted && (pred_us == cpupred_us))
+			predicted = 2;
+	}
 
 	if (cpumask_and(&mask, cpu_online_mask, &cluster->child_cpus))
 		latency_us = pm_qos_request_for_cpumask(PM_QOS_CPU_DMA_LATENCY,
