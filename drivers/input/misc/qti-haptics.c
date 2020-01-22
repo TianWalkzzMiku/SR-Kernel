@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0
 /*
- * Copyright (c) 2018, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2018-2020, The Linux Foundation. All rights reserved.
  */
 
 #include <linux/debugfs.h>
@@ -935,6 +935,8 @@ static int qti_haptics_playback(struct input_dev *dev, int effect_id, int val)
 
 	dev_dbg(chip->dev, "playback, val = %d\n", val);
 	if (!!val) {
+		pr_debug("Vibration - on at %lu us\n",
+				(unsigned long)ktime_to_us(ktime_get()));
 		rc = qti_haptics_module_en(chip, true);
 		if (rc < 0)
 			return rc;
@@ -964,6 +966,8 @@ static int qti_haptics_playback(struct input_dev *dev, int effect_id, int val)
 					HRTIMER_MODE_REL);
 		}
 	} else {
+		pr_debug("Vibration - off at %lu us\n",
+				(unsigned long)ktime_to_us(ktime_get()));
 		play->length_us = 0;
 		rc = qti_haptics_play(chip, false);
 		if (rc < 0)
