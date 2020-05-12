@@ -22,7 +22,8 @@
 #include <linux/zstd.h>
 
 
-#define ZSTD_DEF_LEVEL	3
+uint compression_level = 1;
+module_param(compression_level, uint, 0644);
 
 struct zstd_ctx {
 	zstd_cctx *cctx;
