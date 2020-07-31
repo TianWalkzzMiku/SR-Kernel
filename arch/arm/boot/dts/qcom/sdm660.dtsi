@@ -157,7 +157,7 @@
 			device_type = "cpu";
 			compatible = "arm,kryo";
 			reg = <0x0 0x100>;
-			clock-frequency = <2208000000>;
+			clock-frequency = <2457600000>;
 			enable-method = "psci";
 			qcom,limits-info = <&mitigation_profile1>;
 			qcom,lmh-dcvs = <&lmh_dcvs1>;
@@ -186,7 +186,7 @@
 			device_type = "cpu";
 			compatible = "arm,kryo";
 			reg = <0x0 0x101>;
-			clock-frequency = <2208000000>;
+			clock-frequency = <2457600000>;
 			enable-method = "psci";
 			qcom,limits-info = <&mitigation_profile2>;
 			qcom,lmh-dcvs = <&lmh_dcvs1>;
@@ -211,7 +211,7 @@
 			device_type = "cpu";
 			compatible = "arm,kryo";
 			reg = <0x0 0x102>;
-			clock-frequency = <2208000000>;
+			clock-frequency = <2457600000>;
 			enable-method = "psci";
 			qcom,limits-info = <&mitigation_profile3>;
 			qcom,lmh-dcvs = <&lmh_dcvs1>;
@@ -236,7 +236,7 @@
 			device_type = "cpu";
 			compatible = "arm,kryo";
 			reg = <0x0 0x103>;
-			clock-frequency = <2208000000>;
+			clock-frequency = <2457600000>;
 			enable-method = "psci";
 			qcom,limits-info = <&mitigation_profile4>;
 			qcom,lmh-dcvs = <&lmh_dcvs1>;
@@ -296,6 +296,7 @@
 		};
 	};
 
+<<<<<<< HEAD
 		energy_costs: energy-costs {
 			compatible = "sched-energy";
 
@@ -357,6 +358,68 @@
 					4 3 2 1
 				>;
 			};
+=======
+	energy_costs: energy-costs {
+		compatible = "sched-energy";
+
+		CPU_COST_0: core-cost0 {
+			busy-cost-data = <
+				 300000   11
+				 633600   23
+				 902400  139
+				1113600  259
+				1401600  482
+				1536000  690
+				1612800  725
+				1843200 1102
+			>;
+			idle-cost-data = <
+				20 16 12 8
+			>;
+		};
+		CPU_COST_1: core-cost1 {
+			busy-cost-data = <
+				 300000  202
+				1113600  749
+				1401600 1443
+				1747200 2576
+				1958400 4153
+				2208000 6688
+				2457600 7444
+			>;
+			idle-cost-data = <
+				100 80 60 40
+			>;
+		};
+		CLUSTER_COST_0: cluster-cost0 {
+			busy-cost-data = <
+				 300000  4
+				 633600  8
+				 902400 14
+				1113600 20
+				1401600 29
+				1536000 35
+				1612800 37
+				1843200 62
+			>;
+			idle-cost-data = <
+				4 3 2 1
+			>;
+		};
+		CLUSTER_COST_1: cluster-cost1 {
+			busy-cost-data = <
+				 300000  36
+				1113600 135
+				1401600 193
+				1747200 272
+				1958400 363
+				2208000 585
+				2457600 651
+			>;
+			idle-cost-data = <
+				4 3 2 1
+			>;
+>>>>>>> fc006dcdbae1... dts: minor cpu frequency fixups
 		};
 
 	clocks {
