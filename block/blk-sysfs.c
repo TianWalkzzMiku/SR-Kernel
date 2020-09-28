@@ -472,7 +472,7 @@ static struct queue_sysfs_entry queue_iostats_entry = {
 };
 
 static struct queue_sysfs_entry queue_random_entry = {
-	.attr = {.name = "add_random", .mode = S_IRUGO | S_IWUSR },
+	.attr = {.name = "add_random", .mode = S_IRUGO | S_IRUSR },
 	.show = queue_show_random,
 	.store = queue_store_random,
 };
