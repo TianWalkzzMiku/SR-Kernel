@@ -746,7 +746,6 @@ out:
 	/* Return the error we got before releasing memory access */
 	return rc;
 }
-#if defined(CONFIG_KERNEL_CUSTOM_E7T)
 int fg_dma_mem_req(struct fg_chip *chip, bool request)
 {
 	int ret, rc = 0, retry_count  = RETRY_COUNT;
@@ -779,7 +778,7 @@ int fg_dma_mem_req(struct fg_chip *chip, bool request)
 				break;
 			msleep(20);
 		}
-		if (!retry_count && !(val & MEM_GNT_BIT)) {
+		if ((retry_count < 0) && !(val & MEM_GNT_BIT)) {
 			pr_err("failed to get memory access\n");
 			rc = -ETIMEDOUT;
 			goto release_mem;
@@ -804,7 +803,7 @@ release_mem:
 
 	return rc;
 }
-#endif
+
 int fg_ima_init(struct fg_chip *chip)
 {
 	int rc;
