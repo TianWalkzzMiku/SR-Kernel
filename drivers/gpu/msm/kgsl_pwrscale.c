@@ -654,7 +654,7 @@ int kgsl_pwrscale_init(struct device *dev, const char *governor)
 	profile->initial_freq =
 		pwr->pwrlevels[pwr->num_pwrlevels - 1].gpu_freq;
 	/* Let's start with 10 ms and tune in later */
-	profile->polling_ms = 10;
+	profile->polling_ms = 5;
 
 	/* do not include the 'off' level or duplicate freq. levels */
 	for (i = 0; i < (pwr->num_pwrlevels - 1); i++)
