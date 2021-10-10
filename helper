@@ -2,7 +2,7 @@
 
 DATE=$(date +"%Y%m%d-%H%M")
 bot_token=2075901517:AAFJm24d7VH1ZqPDFUy8kZ6lbES-bqONshQ
-chat_id=--1001531313436
+chat_id=-1001531313436
 make_build(){
 	print "Make kernel dtb..." green
 	if [ $TOOLCHAIN == clang ]; then
