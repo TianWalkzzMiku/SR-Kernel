@@ -2,7 +2,7 @@
 
 export KERNELNAME=SRK
 
-export LOCALVERSION=Petriks-V22
+export LOCALVERSION=Petriks-V23
 
 export KBUILD_BUILD_USER=WhysDev
 
