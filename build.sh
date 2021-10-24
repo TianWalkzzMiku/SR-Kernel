@@ -2,7 +2,7 @@
 
 export KERNELNAME=Super
 
-export LOCALVERSION=-SuperRyzen-V5
+export LOCALVERSION=-SuperRyzen-V6
 
 export KBUILD_BUILD_USER=WhysDevs
 
