@@ -157,11 +157,7 @@
 			device_type = "cpu";
 			compatible = "arm,kryo";
 			reg = <0x0 0x100>;
-<<<<<<< HEAD
-			clock-frequency = <1804800000>;
-=======
 			clock-frequency = <2457600000>;
->>>>>>> fc006dcdbae1... dts: minor cpu frequency fixups
 			enable-method = "psci";
 			qcom,limits-info = <&mitigation_profile1>;
 			qcom,lmh-dcvs = <&lmh_dcvs1>;
@@ -190,11 +186,7 @@
 			device_type = "cpu";
 			compatible = "arm,kryo";
 			reg = <0x0 0x101>;
-<<<<<<< HEAD
-			clock-frequency = <1804800000>;
-=======
 			clock-frequency = <2457600000>;
->>>>>>> fc006dcdbae1... dts: minor cpu frequency fixups
 			enable-method = "psci";
 			qcom,limits-info = <&mitigation_profile2>;
 			qcom,lmh-dcvs = <&lmh_dcvs1>;
@@ -219,11 +211,7 @@
 			device_type = "cpu";
 			compatible = "arm,kryo";
 			reg = <0x0 0x102>;
-<<<<<<< HEAD
-			clock-frequency = <1804800000>;
-=======
 			clock-frequency = <2457600000>;
->>>>>>> fc006dcdbae1... dts: minor cpu frequency fixups
 			enable-method = "psci";
 			qcom,limits-info = <&mitigation_profile3>;
 			qcom,lmh-dcvs = <&lmh_dcvs1>;
@@ -248,11 +236,7 @@
 			device_type = "cpu";
 			compatible = "arm,kryo";
 			reg = <0x0 0x103>;
-<<<<<<< HEAD
-			clock-frequency = <1804800000>;
-=======
 			clock-frequency = <2457600000>;
->>>>>>> fc006dcdbae1... dts: minor cpu frequency fixups
 			enable-method = "psci";
 			qcom,limits-info = <&mitigation_profile4>;
 			qcom,lmh-dcvs = <&lmh_dcvs1>;
@@ -312,7 +296,6 @@
 		};
 	};
 
-<<<<<<< HEAD
 		energy_costs: energy-costs {
 			compatible = "sched-energy";
 
@@ -364,7 +347,6 @@
 					4 3 2 1
 				>;
 			};
-=======
 	energy_costs: energy-costs {
 		compatible = "sched-energy";
 
@@ -425,7 +407,6 @@
 			idle-cost-data = <
 				4 3 2 1
 			>;
->>>>>>> fc006dcdbae1... dts: minor cpu frequency fixups
 		};
 
 	clocks {
@@ -1502,26 +1483,18 @@
 			<  1113600000 0x0404003a 0x052e002e 0x1 2 >,
 			<  1401600000 0x04040049 0x073a003a 0x2 3 >,
 			<  1747200000 0x0404005b 0x09480048 0x2 4 >,
-<<<<<<< HEAD
-			<  1804800000 0x0404005e 0x094b004b 0x2 5 >;
-=======
 			<  1804800000 0x0404005e 0x094b004b 0x2 5 >,
 			<  2208000000 0x04040073 0x0b5c005c 0x3 6 >,
 			<  2457600000 0x04040080 0x0c660066 0x3 7 >;
->>>>>>> c087848ad6da... dts: memlat use cpufreq & add 2.45GHz step
 
 		qcom,perfcl-speedbin4-v0 =
 			<   300000000 0x0004000f 0x01200020 0x1 1 >,
 			<  1113600000 0x0404003a 0x052e002e 0x1 2 >,
 			<  1401600000 0x04040049 0x073a003a 0x2 3 >,
 			<  1747200000 0x0404005b 0x09480048 0x2 4 >,
-<<<<<<< HEAD
-			<  1958400000 0x04040066 0x0a510051 0x2 5 >;
-=======
 			<  1804800000 0x0404005e 0x094b004b 0x2 5 >,
 			<  2208000000 0x04040073 0x0b5c005c 0x3 6 >,
 			<  2457600000 0x04040080 0x0c660066 0x3 7 >;
->>>>>>> c087848ad6da... dts: memlat use cpufreq & add 2.45GHz step
 
 		qcom,up-timer = <1000 1000>;
 		qcom,down-timer = <1000 1000>;
