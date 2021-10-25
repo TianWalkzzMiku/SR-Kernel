@@ -1,4 +1,4 @@
-/* Copyright (c) 2016-2018, The Linux Foundation. All rights reserved.
+/* Copyright (c) 2016-2019, The Linux Foundation. All rights reserved.
  * Copyright (C) 2019 XiaoMi, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
@@ -35,7 +35,7 @@
 
 	chosen {
 		stdout-path = "serial0";
-		bootargs = "rcupdate.rcu_normal_after_boot=1 quiet noirqdebug";
+		bootargs = "rcupdate.rcu_expedited=1 rcupdate.rcu_normal_after_boot=1 rcu_nocbs=0-7 nosoftlockup mce=ignore_ce quiet noirqdebug";
 	};
 
 	psci {
@@ -51,12 +51,13 @@
 			device_type = "cpu";
 			compatible = "arm,kryo";
 			reg = <0x0 0x0>;
-			clock-frequency = <1612800000>;
+			clock-frequency = <1843200000>;
 			enable-method = "psci";
 			qcom,limits-info = <&mitigation_profile0>;
 			qcom,lmh-dcvs = <&lmh_dcvs0>;
+			#cooling-cells = <2>;
 			qcom,ea = <&ea0>;
-			efficiency = <615>;
+			efficiency = <1024>;
 			sched-energy-costs = <&CPU_COST_0 &CLUSTER_COST_0>;
 			next-level-cache = <&L2_0>;
 			L2_0: l2-cache {
@@ -82,12 +83,13 @@
 			device_type = "cpu";
 			compatible = "arm,kryo";
 			reg = <0x0 0x1>;
-			clock-frequency = <1612800000>;
+			clock-frequency = <1843200000>;
 			enable-method = "psci";
 			qcom,limits-info = <&mitigation_profile0>;
 			qcom,lmh-dcvs = <&lmh_dcvs0>;
+			#cooling-cells = <2>;
 			qcom,ea = <&ea1>;
-			efficiency = <615>;
+			efficiency = <1024>;
 			sched-energy-costs = <&CPU_COST_0 &CLUSTER_COST_0>;
 			next-level-cache = <&L2_0>;
 			L1_I_1: l1-icache {
@@ -107,12 +109,13 @@
 			device_type = "cpu";
 			compatible = "arm,kryo";
 			reg = <0x0 0x2>;
-			clock-frequency = <1612800000>;
+			clock-frequency = <1843200000>;
 			enable-method = "psci";
 			qcom,limits-info = <&mitigation_profile0>;
 			qcom,lmh-dcvs = <&lmh_dcvs0>;
+			#cooling-cells = <2>;
 			qcom,ea = <&ea2>;
-			efficiency = <615>;
+			efficiency = <1024>;
 			sched-energy-costs = <&CPU_COST_0 &CLUSTER_COST_0>;
 			next-level-cache = <&L2_0>;
 			L1_I_2: l1-icache {
@@ -132,12 +135,13 @@
 			device_type = "cpu";
 			compatible = "arm,kryo";
 			reg = <0x0 0x3>;
-			clock-frequency = <1612800000>;
+			clock-frequency = <1843200000>;
 			enable-method = "psci";
 			qcom,limits-info = <&mitigation_profile0>;
 			qcom,lmh-dcvs = <&lmh_dcvs0>;
+			#cooling-cells = <2>;
 			qcom,ea = <&ea3>;
-			efficiency = <615>;
+			efficiency = <1024>;
 			sched-energy-costs = <&CPU_COST_0 &CLUSTER_COST_0>;
 			next-level-cache = <&L2_0>;
 			L1_I_3: l1-icache {
@@ -161,8 +165,9 @@
 			enable-method = "psci";
 			qcom,limits-info = <&mitigation_profile1>;
 			qcom,lmh-dcvs = <&lmh_dcvs1>;
+			#cooling-cells = <2>;
 			qcom,ea = <&ea4>;
-			efficiency = <1024>;
+			efficiency = <1638>;
 			sched-energy-costs = <&CPU_COST_1 &CLUSTER_COST_1>;
 			next-level-cache = <&L2_1>;
 			L2_1: l2-cache {
@@ -190,8 +195,9 @@
 			enable-method = "psci";
 			qcom,limits-info = <&mitigation_profile2>;
 			qcom,lmh-dcvs = <&lmh_dcvs1>;
+			#cooling-cells = <2>;
 			qcom,ea = <&ea5>;
-			efficiency = <1024>;
+			efficiency = <1638>;
 			sched-energy-costs = <&CPU_COST_1 &CLUSTER_COST_1>;
 			next-level-cache = <&L2_1>;
 			L1_I_101: l1-icache {
@@ -215,8 +221,9 @@
 			enable-method = "psci";
 			qcom,limits-info = <&mitigation_profile3>;
 			qcom,lmh-dcvs = <&lmh_dcvs1>;
+			#cooling-cells = <2>;
 			qcom,ea = <&ea6>;
-			efficiency = <1024>;
+			efficiency = <1638>;
 			sched-energy-costs = <&CPU_COST_1 &CLUSTER_COST_1>;
 			next-level-cache = <&L2_1>;
 			L1_I_102: l1-icache {
@@ -240,8 +247,9 @@
 			enable-method = "psci";
 			qcom,limits-info = <&mitigation_profile4>;
 			qcom,lmh-dcvs = <&lmh_dcvs1>;
+			#cooling-cells = <2>;
 			qcom,ea = <&ea7>;
-			efficiency = <1024>;
+			efficiency = <1638>;
 			sched-energy-costs = <&CPU_COST_1 &CLUSTER_COST_1>;
 			next-level-cache = <&L2_1>;
 			L1_I_103: l1-icache {
@@ -296,84 +304,33 @@
 		};
 	};
 
-		energy_costs: energy-costs {
-			compatible = "sched-energy";
-
-			CPU_COST_0: core-cost0 {
-				busy-cost-data = <
-					633600  51
-					902400  74
-					1113600 88
-					1401600 148
-					1536000 162
-					1612800 182
-				>;
-				idle-cost-data = <
-					20 16 12 8
-				>;
-			};
-			CPU_COST_1: core-cost1 {
-				busy-cost-data = <
-					1113600 291
-					1401600 367
-					1747200 561
-					1804800 558
-				>;
-				idle-cost-data = <
-					100 80 60 40
-				>;
-			};
-			CLUSTER_COST_0: cluster-cost0 {
-				busy-cost-data = <
-					633600  3
-					902400  8
-					1113600 13
-					1401600 23
-					1536000 32
-					1612800 39
-				>;
-				idle-cost-data = <
-					4 3 2 1
-				>;
-			};
-			CLUSTER_COST_1: cluster-cost1 {
-				busy-cost-data = <
-					1113600 34
-					1401600 63
-					1747200 111
-					1804800 178
-				>;
-				idle-cost-data = <
-					4 3 2 1
-				>;
-			};
 	energy_costs: energy-costs {
 		compatible = "sched-energy";
 
 		CPU_COST_0: core-cost0 {
 			busy-cost-data = <
-				 300000   11
-				 633600   23
-				 902400  139
-				1113600  259
-				1401600  482
-				1536000  690
-				1612800  725
-				1843200 1102
+				 300000   19
+				 633600   41
+				 902400   79
+				1113600  115
+				1401600  204
+				1536000  233
+				1612800  257
+				1843200  293
 			>;
 			idle-cost-data = <
-				20 16 12 8
+				20 16 10 8
 			>;
 		};
 		CPU_COST_1: core-cost1 {
 			busy-cost-data = <
-				 300000  202
-				1113600  749
-				1401600 1443
-				1747200 2576
-				1804800 2661
-				2208000 6688
-				2457600 7444
+				 300000  100
+				1113600  370
+				1401600  519
+				1747200  827
+				1958400  958
+				2208000 1080
+				2457600 1202
 			>;
 			idle-cost-data = <
 				100 80 60 40
@@ -387,8 +344,8 @@
 				1113600 20
 				1401600 29
 				1536000 35
-				1612800 37
-				1843200 62
+				1612800 39
+				1843200 44
 			>;
 			idle-cost-data = <
 				4 3 2 1
@@ -400,14 +357,15 @@
 				1113600 135
 				1401600 193
 				1747200 272
-				1804800 281
-				2208000 585
-				2457600 651
+				1958400 317
+				2208000 357
+				2457600 397
 			>;
 			idle-cost-data = <
 				4 3 2 1
 			>;
 		};
+	};
 
 	clocks {
 		xo_board {
@@ -436,7 +394,7 @@
 					compatible = "android,vendor";
 					dev = "/dev/block/platform/soc/c0c4000.sdhci/by-name/vendor";
 					type = "ext4";
-					mnt_flags = "ro,barrier=1";
+					mnt_flags = "ro,barrier=1,discard";
 					fsmgr_flags = "wait";
 					status = "ok";
 				};
@@ -444,7 +402,7 @@
 					compatible = "android,system";
 					dev = "/dev/block/platform/soc/c0c4000.sdhci/by-name/system";
 					type = "ext4";
-					mnt_flags = "ro,barrier=1";
+					mnt_flags = "ro,barrier=1,discard";
 					fsmgr_flags = "wait";
 					status = "ok";
 				};
@@ -537,7 +495,7 @@
 			alloc-ranges = <0 0x00000000 0 0xffffffff>;
 			reusable;
 			alignment = <0 0x400000>;
-			size = <0 0x2c00000>;
+			size = <0 0x8000000>;
 			linux,cma-default;
 		};
 
@@ -546,12 +504,10 @@
 			label = "cont_splash_mem";
 		};
 
-		pstore_reserve_mem: pstore_reserve_mem_region@0 {
-			linux,reserve-contiguous-region;
-			linux,reserve-region;
-			linux,remove-completely;
-			reg = <0x0 0xA0000000 0x0 0x00400000>;
-			label = "pstore_reserve_mem";
+		ramoops_mem: ramoops_region@b0000000 {
+			compatible = "removed-dma-pool";
+			no-map;
+			reg = <0 0xb0000000 0 0x400000>;
 		};
 	};
 
@@ -794,6 +750,13 @@
 		};
 	};
 
+	ramoops {
+		compatible = "ramoops";
+		memory-region = <&ramoops_mem>;
+		console-size = <0x0 0x200000>;
+		pmsg-size = <0x0 0x200000>;
+	};
+
 	tsens: tsens@10ad000 {
 		compatible = "qcom,sdm660-tsens";
 		reg = <0x10ad000 0x2000>,
@@ -970,7 +933,7 @@
 	qcom,msm-thermal {
 		compatible = "qcom,msm-thermal";
 		qcom,sensor-id = <1>;
-		qcom,poll-ms = <100>;
+		qcom,poll-ms = <1000>;
 		qcom,therm-reset-temp = <115>;
 		qcom,core-limit-temp = <70>;
 		qcom,core-temp-hysteresis = <10>;
@@ -1018,10 +981,10 @@
 
 	qcom,bcl {
 		compatible = "qcom,bcl";
-		qcom,bcl-enable;
+/*		qcom,bcl-enable; */
 		qcom,bcl-framework-interface;
-		qcom,bcl-hotplug-list = <>;
-		qcom,bcl-soc-hotplug-list = <>;
+		qcom,bcl-hotplug-list = <&CPU6 &CPU7>;
+		qcom,bcl-soc-hotplug-list = <&CPU4 &CPU5 &CPU6 &CPU7>;
 		qcom,ibat-monitor {
 			qcom,low-threshold-uamp = <3400000>;
 			qcom,high-threshold-uamp = <4200000>;
@@ -1326,44 +1289,36 @@
 
 	memlat_cpu0: qcom,memlat-cpu0 {
 		compatible = "qcom,devbw";
-		governor = "cpufreq";
+		governor = "powersave";
 		qcom,src-dst-ports = <1 512>;
 		qcom,active-only;
 		qcom,bw-tbl =
-			<  381  /*  100 MHz */ >,
-			<  572  /*  150 MHz */ >,
-			<  762  /*  200 MHz */ >,
-			<  1144 /*  300 MHz */ >,
-			<  1571 /*  412 MHz */ >,
-			<  2086 /*  547 MHz */ >,
-			<  2597 /*  681 MHz */ >,
-			<  2929 /*  768 MHz */ >,
-			<  3879 /* 1017 MHz */ >,
-			<  4943 /* 1296 MHz */ >,
-			<  5163 /* 1353 MHz */ >,
-			<  5931 /* 1555 MHz */ >,
-			<  6881 /* 1804 MHz */ >;
+			<  381  /*   300 MHz */ >,
+			<  572  /*   633 MHz */ >,
+			<  762  /*   902 MHz */ >,
+			<  1144 /*  1113 MHz */ >,
+			<  1571 /*  1401 MHz */ >,
+			<  2086 /*  1536 MHz */ >,
+			<  2597 /*  1612 MHz */ >,
+			<  2929 /*  1742 MHz */ >,
+			<  3879 /*  1843 MHz */ >;
 	};
 
 	memlat_cpu4: qcom,memlat-cpu4 {
 		compatible = "qcom,devbw";
-		governor = "cpufreq";
+		governor = "powersave";
 		qcom,src-dst-ports = <1 512>;
 		qcom,active-only;
 		qcom,bw-tbl =
-			<  381  /*  100 MHz */ >,
-			<  572  /*  150 MHz */ >,
-			<  762  /*  200 MHz */ >,
-			<  1144 /*  300 MHz */ >,
-			<  1571 /*  412 MHz */ >,
-			<  2086 /*  547 MHz */ >,
-			<  2597 /*  681 MHz */ >,
-			<  2929 /*  768 MHz */ >,
-			<  3879 /* 1017 MHz */ >,
-			<  4943 /* 1296 MHz */ >,
-			<  5163 /* 1353 MHz */ >,
-			<  5931 /* 1555 MHz */ >,
-			<  6881 /* 1804 MHz */ >;
+			<  381  /*   300 MHz */ >,
+			<  762  /*  1113 MHz */ >,
+			<  2086 /*  1401 MHz */ >,
+			<  2929 /*  1747 MHz */ >,
+			<  3879 /*  1804 MHz */ >,
+			<  4943 /*  1958 MHz */ >,
+			<  5163 /*  2150 MHz */ >,
+			<  5931 /*  2208 MHz */ >,
+			<  6881 /*  2457 MHz */ >;
 	};
 
 	devfreq_memlat_0: qcom,arm-memlat-mon-0 {
@@ -1403,6 +1358,16 @@
 				< 2208000 6881 >,
 				< 2457600 6881 >;
 		};
+	};
+
+	devfreq_compute: qcom,devfreq-compute {
+		compatible = "qcom,arm-cpu-mon";
+		qcom,cpulist = <&CPU0 &CPU1 &CPU2 &CPU3>;
+		qcom,target-dev = <&mincpubw>;
+		qcom,core-dev-table =
+                        < 902400 762 >,
+                        < 1401600 2086 >,
+                        < 1843200 3879 >;
 	};
 
 	clock_cpu: qcom,clk-cpu-660@179c0000 {
@@ -1448,7 +1413,8 @@
 			<  1113600000 0x0404003a 0x052e002e 0x2 4 >,
 			<  1401600000 0x04040049 0x073a003a 0x2 5 >,
 			<  1536000000 0x04040050 0x08400040 0x2 6 >,
-			<  1612800000 0x04040054 0x09430043 0x2 7 >;
+			<  1612800000 0x04040054 0x09430043 0x2 7 >,
+			<  1843200000 0x04040060 0x094c004c 0x3 8 >;
 
 		qcom,pwrcl-speedbin4-v0 =
 			<   300000000 0x0004000f 0x01200020 0x1 1 >,
@@ -2567,6 +2533,10 @@
 		"HS_RB_G1_L1", "HS_RB_G2_L1", "HS_RB_G3_L1",
 		"MAX";
 
+		pinctrl-names = "dev-reset-assert", "dev-reset-deassert";
+		pinctrl-0 = <&ufs_dev_reset_assert>;
+		pinctrl-1 = <&ufs_dev_reset_deassert>;
+
 		resets = <&clock_gcc GCC_UFS_BCR>;
 		reset-names = "core_reset";
 
@@ -2787,7 +2757,7 @@
 #include "msm-rdbg.dtsi"
 #include "sdm660-camera.dtsi"
 #include "sdm660-vidc.dtsi"
-#include "msm-audio.dtsi"
+#include "msm-audio_e7t.dtsi"
 #include "sdm660-audio.dtsi"
 
 &pm660l_gpios {
@@ -2849,3 +2819,5 @@
 
 #include "sdm660-mdss.dtsi"
 #include "sdm660-mdss-pll.dtsi"
+#include "sdm660-thermal.dtsi"
+#include "sdm660-thermal.dtsi"
