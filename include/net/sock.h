@@ -59,6 +59,7 @@
 #include <linux/static_key.h>
 #include <linux/sched.h>
 #include <linux/cgroup-defs.h>
+#include <linux/wait.h>
 
 #include <linux/filter.h>
 #include <linux/rculist_nulls.h>
@@ -1934,7 +1935,7 @@ static inline bool sk_has_allocations(const struct sock *sk)
 }
 
 /**
- * wq_has_sleeper - check if there are any waiting processes
+ * skwq_has_sleeper - check if there are any waiting processes
  * @wq: struct socket_wq
  *
  * Returns true if socket_wq has waiting processes
@@ -1977,7 +1978,7 @@ static inline bool skwq_has_sleeper(struct socket_wq *wq)
  * @wait_address:   socket wait queue
  * @p:              poll_table
  *
- * See the comments in the wq_has_sleeper function.
+ * See the comments in the skwq_has_sleeper function.
  */
 static inline void sock_poll_wait(struct file *filp,
 		wait_queue_head_t *wait_address, poll_table *p)
@@ -1987,7 +1988,7 @@ static inline void sock_poll_wait(struct file *filp,
 		/* We need to be sure we are in sync with the
 		 * socket flags modification.
 		 *
-		 * This memory barrier is paired in the wq_has_sleeper.
+		 * This memory barrier is paired in the skwq_has_sleeper.
 		 */
 		smp_mb();
 	}
