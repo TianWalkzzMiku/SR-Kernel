@@ -400,22 +400,6 @@ struct sock {
 	atomic_t		sk_omem_alloc;
 	int			sk_sndbuf;
 	struct sk_buff_head	sk_write_queue;
-	__s32			sk_peek_off;
-	int			sk_write_pending;
-	long			sk_sndtimeo;
-	struct timer_list	sk_timer;
-	__u32			sk_priority;
-	__u32			sk_mark;
-	u32			sk_pacing_rate; /* bytes per second */
-	u32			sk_max_pacing_rate;
-	struct page_frag	sk_frag;
-	netdev_features_t	sk_route_caps;
-	netdev_features_t	sk_route_nocaps;
-	int			sk_gso_type;
-	unsigned int		sk_gso_max_size;
-	gfp_t			sk_allocation;
-	__u32			sk_txhash;
-
 	kmemcheck_bitfield_begin(flags);
 	unsigned int		sk_shutdown  : 2,
 				sk_no_check_tx : 1,
@@ -446,6 +430,9 @@ struct sock {
 	__u32			sk_priority;
 	spinlock_t		sk_peer_lock;
 	__u32			sk_mark;
+#if IS_ENABLED(CONFIG_CGROUP_NET_PRIO)
+	__u32			sk_cgrp_prioidx;
+#endif
 	struct pid		*sk_peer_pid;
 	const struct cred	*sk_peer_cred;
 
@@ -467,6 +454,7 @@ struct sock {
 #ifdef CONFIG_SECURITY
 	void			*sk_security;
 #endif
+	__u32			sk_mark;
 	kuid_t			sk_uid;
 	struct sock_cgroup_data	sk_cgrp_data;
 	struct cg_proto		*sk_cgrp;
