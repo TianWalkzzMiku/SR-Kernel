@@ -2,7 +2,7 @@
 
 export KERNELNAME=Super
 
-export LOCALVERSION=-SuperRyzen-V7
+export LOCALVERSION=-SuperRyzen-VIP_Edition-V7
 
 export KBUILD_BUILD_USER=WhysDev
 
@@ -10,7 +10,7 @@ export KBUILD_BUILD_HOST=NakanoMiku
 
 export TOOLCHAIN=clang
 
-export DEVICES=whyred,tulip,lavender,a26x
+export DEVICES=whyred,tulip
 
 source helper
 
@@ -27,21 +27,7 @@ do
 	build ${i} -newcam
 done
 
-send_msg "⏳ Start building Overclock version | DEVICES: whyred - tulip"
-
-git apply oc.patch
-
 git apply em.patch
-
-for i in ${DEVICES//,/ }
-do
-	if [ $i == "whyred" ] || [ $i == "tulip" ]
-	then
-		build ${i} -oldcam -overclock
-
-		build ${i} -newcam -overclock
-	fi
-done
 
 END=$(date +"%s")
 
