@@ -295,6 +295,7 @@
 			};
 		};
 	};
+
 	energy_costs: energy-costs {
 		compatible = "sched-energy";
 
