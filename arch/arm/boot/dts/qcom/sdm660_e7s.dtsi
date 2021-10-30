@@ -347,6 +347,7 @@
 					4 3 2 1
 				>;
 			};
+
 	energy_costs: energy-costs {
 		compatible = "sched-energy";
 
