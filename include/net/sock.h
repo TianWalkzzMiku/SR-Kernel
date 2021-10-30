@@ -429,6 +429,7 @@ struct sock {
 	u32			sk_max_ack_backlog;
 	__u32			sk_priority;
 	spinlock_t		sk_peer_lock:
+        __u32			sk_mark;
 	struct pid		*sk_peer_pid;
 	const struct cred	*sk_peer_cred;
 
@@ -450,8 +451,13 @@ struct sock {
 #ifdef CONFIG_SECURITY
 	void			*sk_security;
 #endif
-        __u32			sk_mark;
 	kuid_t			sk_uid;
+#if IS_ENABLED(CONFIG_CGROUP_NET_PRIO)
+	u16			sk_cgrp_prioidx;
+#endif
+#ifdef CONFIG_CGROUP_NET_CLASSID
+	u32			sk_classid;
+#endif
 	struct sock_cgroup_data	sk_cgrp_data;
 	struct cg_proto		*sk_cgrp;
 	void			(*sk_state_change)(struct sock *sk);
