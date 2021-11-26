@@ -77,12 +77,12 @@ print(){
 
 gen_toolchain(){
 	print "Cloning toolchain files..." green
-	if [ $TOOLCHAIN == "gcc" ]
+	if [ $TOOLCHAIN == "GCC" ]
 	then
 		git clone --depth=1 https://github.com/kdrag0n/proton-clang clang
 	else
-		git clone --depth=1 https://github.com/WhysDev/aarch64-elf elf-gcc-10 gcc64
-		git clone --depth=1 https://github.com/WhysDev/arm-gcc elf-gcc-10 gcc32
+		git clone --depth=1 https://github.com/WhysDev/aarch64-gcc -b elf-gcc-10 gcc64
+		git clone --depth=1 https://github.com/WhysDev/arm-gcc -b elf-gcc-10 gcc32
 	fi
 	git clone --depth=1 https://github.com/WhysDev/AnyKernel3-2 -b master anykernel
 }
