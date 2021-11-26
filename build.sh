@@ -2,21 +2,21 @@
 
 export KERNELNAME=Super
 
-export LOCALVERSION=-SuperRyzen-V1
+export LOCALVERSION=-SuperRyzen-V8
 
-export KBUILD_BUILD_USER=WhysDevs
+export KBUILD_BUILD_USER=TianWalkzzMiku
 
-export KBUILD_BUILD_HOST=DroneCI
+export KBUILD_BUILD_HOST=NakanoMiku
 
-export TOOLCHAIN=clang
+export TOOLCHAIN=gcc
 
-export DEVICES=whyred,tulip,lavender,a26x
+export DEVICES=whyred,tulip,lavender
 
 source helper
 
 gen_toolchain
 
-send_msg "⏳ Start building ${KERNELNAME} ${LOCALVERSION} | DEVICES: whyred - tulip - lavender - wayne - jasmine"
+send_msg "⏳ Start building ${KERNELNAME} ${LOCALVERSION} | DEVICES: whyred - tulip - lavender"
 
 START=$(date +"%s")
 
