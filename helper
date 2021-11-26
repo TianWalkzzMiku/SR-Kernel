@@ -1,8 +1,8 @@
 #!/bin/bash
 
 DATE=$(date +"%Y%m%d-%H%M")
-bot_token=1678018441:AAF5dhxlB216j3Cl4fnCZ09heng8R3Geyoc
-chat_id=-1001287929514
+bot_token=2109118145:AAGHMJLYLJRF3WmDRK3SPEGJlW5AEUe-iNk
+chat_id=-1001783550772
 make_build(){
 	print "Make kernel dtb..." green
 	if [ $TOOLCHAIN == clang ]; then
