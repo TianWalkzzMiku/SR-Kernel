@@ -2,7 +2,7 @@
 
 export KERNELNAME=Super
 
-export LOCALVERSION=-SuperRyzen-V8
+export LOCALVERSION=-SuperRyzen-V8-qti-haptics
 
 export KBUILD_BUILD_USER=TianWalkzzMiku
 
