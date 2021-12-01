@@ -82,7 +82,7 @@ gen_toolchain(){
 		git clone --depth=1 https://github.com/kdrag0n/proton-clang clang
 	else
 		git clone --depth=1 https://github.com/baalajimaestro/aarch64-maestro-linux-android -b 05022020 gcc64
-		git clone --depth=1 https://github.com/TheHitMan7/arm-maestro-linux-gnueabi -b master gcc32
+		git clone --depth=1 https://gitlab.com/baalajimaestro/arm-maestro-linux-gnueabi.git -b 05022020 gcc32
 	fi
 	git clone --depth=1 https://github.com/WhysDev/AnyKernel3-2 -b master anykernel
 }
