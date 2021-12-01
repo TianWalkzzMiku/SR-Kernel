@@ -20,7 +20,7 @@ make_build(){
 				CROSS_COMPILE_ARM32=arm-linux-gnueabi-
 	else
 		export CROSS_COMPILE=$(pwd)/gcc64/bin/aarch64-maestro-linux-gnu-
-		export CROSS_COMPILE_ARM32=$(pwd)/gcc32/bin/arm-maestro-gnueabi-
+		export CROSS_COMPILE_ARM32=$(pwd)/gcc32/bin/arm-maestro-linux-gnueabi-
 		make O=out ARCH=arm64 $1
 		make -j$(nproc --all) O=out ARCH=arm64
 	fi
