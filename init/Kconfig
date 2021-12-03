@@ -1515,10 +1515,6 @@ config CC_OPTIMIZE_FOR_SIZE
 
 endchoice
 
-config LTO
-	bool "Enable Link Time Optimization"
-	select THIN_ARCHIVES
-
 config GCC_GRAPHITE
 	bool "Enable GCC Polyhedral Loop Optimization (Graphite)"
 

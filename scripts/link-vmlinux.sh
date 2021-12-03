@@ -41,17 +41,8 @@ info()
 # ${1} output file
 modpost_link()
 {
-	local objects
-
-	if [ -n "${CONFIG_THIN_ARCHIVES}" ]; then
-		objects="--whole-archive built-in.o"
-	else
-		objects="${KBUILD_VMLINUX_INIT}				\
-			--start-group					\
-			${KBUILD_VMLINUX_MAIN}				\
-			--end-group"
-	fi
-	${LDFINAL} ${LDFLAGS} -r -o ${1} ${objects}
+	${LD} ${LDFLAGS} -r -o ${1} ${KBUILD_VMLINUX_INIT}                   \
+		--start-group ${KBUILD_VMLINUX_MAIN} --end-group
 }
 
 # Link of vmlinux
@@ -62,18 +53,9 @@ vmlinux_link()
 	local lds="${objtree}/${KBUILD_LDS}"
 
 	if [ "${SRCARCH}" != "um" ]; then
-		if [ -n "${CONFIG_THIN_ARCHIVES}" ]; then
-			objects="--whole-archive built-in.o ${1}"
-		else
-			objects="${KBUILD_VMLINUX_INIT}			\
-				--start-group				\
-				${KBUILD_VMLINUX_MAIN}			\
-				--end-group				\
-				${1}"
-		fi
-
-		${LDFINAL} ${LDFLAGS} ${LDFLAGS_vmlinux} -o ${2}	\
-			-T ${lds} ${objects}
+		${LD} ${LDFLAGS} ${LDFLAGS_vmlinux} -o ${2}                  \
+			-T ${lds} ${KBUILD_VMLINUX_INIT}                     \
+			--start-group ${KBUILD_VMLINUX_MAIN} --end-group ${1}
 	else
 		${CC} ${CFLAGS_vmlinux} -o ${2}                              \
 			-Wl,-T,${lds} ${KBUILD_VMLINUX_INIT}                 \
