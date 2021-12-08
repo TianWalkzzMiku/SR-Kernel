@@ -83,7 +83,7 @@ gen_toolchain(){
 		git clone --depth=1 https://github.com/kdrag0n/proton-clang clang
 	else
 		git clone --depth=1 https://github.com/fiqri19102002/aarch64-gcc -b elf-gcc-10-tarballs gcc64
-		git clone --depth=1 https://gitlab.com/fiqri19102002/arm-gcc -b elf-gcc-tarballs gcc32
+		git clone --depth=1 https://github.com/fiqri19102002/arm-gcc -b elf-gcc-tarballs gcc32
 	fi
 	git clone --depth=1 https://github.com/WhysDev/AnyKernel3-2 -b master anykernel
 }
