@@ -20,8 +20,8 @@ make_build(){
 				CROSS_COMPILE=aarch64-linux-gnu- \
 				CROSS_COMPILE_ARM32=arm-linux-gnueabi-
 	else
-		export CROSS_COMPILE=$(pwd)/gcc64/bin/aarch64-maestro-linux-gnu-
-		export CROSS_COMPILE_ARM32=$(pwd)/gcc32/bin/arm-maestro-linux-gnueabi-
+		export CROSS_COMPILE=$(pwd)/gcc64/bin/aarch64-elf-
+		export CROSS_COMPILE_ARM32=$(pwd)/gcc32/bin/arm-eabi-
 		make O=out ARCH=arm64 $1
 		make -j$(nproc --all) O=out ARCH=arm64
 	fi
@@ -82,8 +82,8 @@ gen_toolchain(){
 	then
 		git clone --depth=1 https://github.com/kdrag0n/proton-clang clang
 	else
-		git clone --depth=1 https://github.com/baalajimaestro/aarch64-maestro-linux-android -b 05022020 gcc64
-		git clone --depth=1 https://gitlab.com/baalajimaestro/arm-maestro-linux-gnueabi.git -b 05022020 gcc32
+		git clone --depth=1 https://github.com/fiqri19102002/aarch64-gcc -b elf-gcc-10-tarballs gcc64
+		git clone --depth=1 https://gitlab.com/fiqri19102002/arm-gcc -b elf-gcc-tarballs gcc32
 	fi
 	git clone --depth=1 https://github.com/WhysDev/AnyKernel3-2 -b master anykernel
 }
