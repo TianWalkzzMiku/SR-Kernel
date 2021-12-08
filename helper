@@ -11,7 +11,7 @@ make_build(){
 		make O=out ARCH=arm64 $1
 		make -j$(nproc --all) O=out \
 				ARCH=arm64 \
-				CC=clang \
+				LD=ld.lld
 				AR=llvm-ar \
 				NM=llvm-nm \
 				OBJCOPY=llvm-objcopy \
@@ -78,7 +78,7 @@ print(){
 
 gen_toolchain(){
 	print "Cloning toolchain files..." green
-	if [ $TOOLCHAIN == "clang" ]
+	if [ $TOOLCHAIN == "GCC" ]
 	then
 		git clone --depth=1 https://github.com/kdrag0n/proton-clang clang
 	else

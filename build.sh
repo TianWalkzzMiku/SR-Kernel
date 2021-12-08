@@ -8,7 +8,7 @@ export KBUILD_BUILD_USER=TianWalkzzMiku
 
 export KBUILD_BUILD_HOST=NakanoMiku
 
-export TOOLCHAIN=clang
+export TOOLCHAIN=gcc
 
 export DEVICES=whyred,tulip,lavender
 
