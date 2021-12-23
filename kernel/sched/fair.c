@@ -4997,7 +4997,6 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
 #ifdef CONFIG_SMP
 	int task_new = flags & ENQUEUE_WAKEUP_NEW;
 #endif
-	bool prefer_idle = schedtune_prefer_idle(p) > 0;
 
 	/*
 	 * The code below (indirectly) updates schedutil which looks at
