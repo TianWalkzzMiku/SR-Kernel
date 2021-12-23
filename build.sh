@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export KERNELNAME=Super
+export KERNELNAME=SRyzen
 
 export LOCALVERSION=-SuperRyzen-V11_OC
 
@@ -22,9 +22,9 @@ START=$(date +"%s")
 
 for i in ${DEVICES//,/ }
 do
-	build ${i} -oldcam -overclock
+	build ${i} -oldcam
 
-	build ${i} -newcam -overclock
+	build ${i} -newcam
 done
 
 git apply oc.patch
