@@ -2,7 +2,7 @@
 
 export KERNELNAME=Super
 
-export LOCALVERSION=-SuperRyzen-V11
+export LOCALVERSION=-SuperRyzen-V11_OC
 
 export KBUILD_BUILD_USER=TianWalkzzMiku
 
@@ -10,38 +10,26 @@ export KBUILD_BUILD_HOST=NakanoMiku
 
 export TOOLCHAIN=gcc
 
-export DEVICES=whyred,tulip,lavender
+export DEVICES=whyred,tulip
 
 source helper
 
 gen_toolchain
 
-send_msg "⏳ Start building ${KERNELNAME} ${LOCALVERSION} | DEVICES: whyred - tulip - lavender"
+send_msg "⏳ Start building ${KERNELNAME} ${LOCALVERSION} | DEVICES: whyred - tulip"
 
 START=$(date +"%s")
 
 for i in ${DEVICES//,/ }
 do
-	build ${i} -oldcam
+	build ${i} -oldcam -overclock
 
-	build ${i} -newcam
+	build ${i} -newcam -overclock
 done
-
-send_msg "⏳ Start building Overclock version | DEVICES: whyred - tulip"
 
 git apply oc.patch
 
 git apply em.patch
-
-for i in ${DEVICES//,/ }
-do
-	if [ $i == "whyred" ] || [ $i == "tulip" ]
-	then
-		build ${i} -oldcam -overclock
-
-		build ${i} -newcam -overclock
-	fi
-done
 
 END=$(date +"%s")
 
