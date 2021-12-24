@@ -2,7 +2,7 @@
 
 export KERNELNAME=Super
 
-export LOCALVERSION=-SuperRyzen-V11
+export LOCALVERSION=-SuperRyzen-V11_Qti
 
 export KBUILD_BUILD_USER=TianWalkzzMiku
 
@@ -10,7 +10,7 @@ export KBUILD_BUILD_HOST=NakanoMiku
 
 export TOOLCHAIN=gcc
 
-export DEVICES=whyred,tulip,lavender
+export DEVICES=whyred,lavender
 
 source helper
 
