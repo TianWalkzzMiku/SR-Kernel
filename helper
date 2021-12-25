@@ -84,7 +84,7 @@ gen_toolchain(){
 		git clone --depth=1 https://github.com/radcolor/aarch64-elf gcc64
 		git clone --depth=1 https://github.com/radcolor/arm-eabi -b master gcc32
 	fi
-	git clone --depth=1 https://github.com/WhysDev/AnyKernel3-2 -b master anykernel
+	git clone --depth=1 https://github.com/kentanglu/AnyKernel_sdm660 -b master anykernel
 }
 
 build(){
