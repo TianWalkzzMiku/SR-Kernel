@@ -85,7 +85,7 @@ gen_toolchain(){
 		git clone --depth=1 https://github.com/baalajimaestro/aarch64-maestro-linux-android -b 05022020 gcc64
 		git clone --depth=1 https://gitlab.com/baalajimaestro/arm-maestro-linux-gnueabi.git -b 05022020 gcc32
 	fi
-	git clone --depth=1 https://github.com/WhysDev/AnyKernel3-2 -b master anykernel
+	git clone --depth=1 https://github.com/kentanglu/AnyKernel_sdm660 -b master anykernel
 }
 
 build(){
