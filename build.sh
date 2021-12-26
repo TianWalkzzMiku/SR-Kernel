@@ -2,7 +2,7 @@
 
 export KERNELNAME=Super
 
-export LOCALVERSION=-SuperRyzen-V9
+export LOCALVERSION=-SuperRyzen-V12
 
 export KBUILD_BUILD_USER=TianWalkzzMiku
 
@@ -30,8 +30,6 @@ done
 send_msg "⏳ Start building Overclock version | DEVICES: whyred - tulip"
 
 git apply oc.patch
-
-git apply em.patch
 
 for i in ${DEVICES//,/ }
 do
