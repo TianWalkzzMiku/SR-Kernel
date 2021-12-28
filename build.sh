@@ -16,7 +16,7 @@ source helper
 
 gen_toolchain
 
-send_msg "⏳ Start building ${KERNELNAME} ${LOCALVERSION} | DEVICES: whyred - tulip"
+send_msg "⏳ Start building ${KERNELNAME} ${LOCALVERSION} | DEVICES: whyred - tulip - lavender"
 
 START=$(date +"%s")
 
@@ -26,8 +26,6 @@ do
 
 	build ${i} -newcam
 done
-
-git apply oc.patch
 
 END=$(date +"%s")
 
