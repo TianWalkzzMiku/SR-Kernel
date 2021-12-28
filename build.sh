@@ -2,7 +2,7 @@
 
 export KERNELNAME=Super
 
-export LOCALVERSION=-SuperRyzen-V12
+export LOCALVERSION=-SuperRyzen-V12_HyperOC_VIP_EDITION
 
 export KBUILD_BUILD_USER=TianWalkzzMiku
 
@@ -16,7 +16,7 @@ source helper
 
 gen_toolchain
 
-send_msg "⏳ Start building ${KERNELNAME} ${LOCALVERSION} | DEVICES: whyred - tulip - lavender"
+send_msg "⏳ Start building ${KERNELNAME} ${LOCALVERSION} | DEVICES: whyred - tulip"
 
 START=$(date +"%s")
 
@@ -27,19 +27,7 @@ do
 	build ${i} -newcam
 done
 
-send_msg "⏳ Start building Overclock version | DEVICES: whyred - tulip"
-
 git apply oc.patch
-
-for i in ${DEVICES//,/ }
-do
-	if [ $i == "whyred" ] || [ $i == "tulip" ]
-	then
-		build ${i} -oldcam -overclock
-
-		build ${i} -newcam -overclock
-	fi
-done
 
 END=$(date +"%s")
 
