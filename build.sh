@@ -10,13 +10,13 @@ export KBUILD_BUILD_HOST=NakanoMiku
 
 export TOOLCHAIN=gcc
 
-export DEVICES=whyred
+export DEVICES=whyred,tulip,lavender
 
 source helper
 
 gen_toolchain
 
-send_msg "⏳ Start building ${KERNELNAME} ${LOCALVERSION} | DEVICES: whyred"
+send_msg "Start building..."
 
 START=$(date +"%s")
 
@@ -27,8 +27,14 @@ do
 	build ${i} -newcam
 done
 
-END=$(date +"%s")
+send_msg "Build OC..."
 
-DIFF=$(( END - START ))
+for i in ${DEVICES//,/ }
+do
+	if [ $i == "whyred" ] || [ $i == "tulip" ]
+	then
+		build ${i} -oldcam -overclock
 
-send_msg "✅ Build completed in $((DIFF / 60))m $((DIFF % 60))s | Linux version : $(make kernelversion) | Last commit: $(git log --pretty=format:'%s' -5)"
+		build ${i} -newcam -overclock
+	fi
+done
