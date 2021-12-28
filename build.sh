@@ -10,13 +10,13 @@ export KBUILD_BUILD_HOST=NakanoMiku
 
 export TOOLCHAIN=gcc
 
-export DEVICES=whyred,tulip,lavender
+export DEVICES=whyred
 
 source helper
 
 gen_toolchain
 
-send_msg "⏳ Start building ${KERNELNAME} ${LOCALVERSION} | DEVICES: whyred - tulip - lavender"
+send_msg "⏳ Start building ${KERNELNAME} ${LOCALVERSION} | DEVICES: whyred"
 
 START=$(date +"%s")
 
