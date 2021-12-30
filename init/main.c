@@ -148,7 +148,9 @@ static int __init set_wiredbtnmode(char *val)
 	return 0;
 }
 __setup("androidboot.wiredbtnaltmode=", set_wiredbtnmode);
+bool miuirom = false;
 bool hapticsqti = false;
+extern bool miuirom;
 static int __init set_qtihaptics_rom(char *val)
 {
 	unsigned int temp;
