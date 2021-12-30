@@ -148,6 +148,27 @@ static int __init set_wiredbtnmode(char *val)
 	return 0;
 }
 __setup("androidboot.wiredbtnaltmode=", set_wiredbtnmode);
+bool hapticsqti = false;
+static int __init set_qtihaptics_rom(char *val)
+{
+	unsigned int temp;
+
+	get_option(&val, &temp);
+
+	if (miuirom) {
+		hapticsqti = false;
+	} else {
+		if (temp) {
+			hapticsqti = true;
+		} else {
+			hapticsqti = false;
+		}
+	}
+
+	return 0;
+}
+__setup("qtihaptics=", set_qtihaptics_rom);
+EXPORT_SYMBOL_GPL(hapticsqti);
 
 /*
  * Used to generate warnings if static_key manipulation functions are used
