@@ -2080,7 +2080,6 @@ static const struct of_device_id haptics_match_table[] = {
 	{ .compatible = "qcom,haptics" },
 	{ .compatible = "qcom,pm660-haptics" },
 	{ .compatible = "qcom,pm8150b-haptics" },
-	{ .compatible = "qcom,qpnp-haptic" },
 	{},
 };
 
