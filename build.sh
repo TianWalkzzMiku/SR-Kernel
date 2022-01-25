@@ -2,7 +2,7 @@
 
 export KERNELNAME=Super
 
-export LOCALVERSION=RyzenV13
+export LOCALVERSION=Ryzen-V13
 
 export KBUILD_BUILD_USER=TianWalkzzMiku
 
