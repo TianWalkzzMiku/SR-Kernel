@@ -23,8 +23,6 @@ START=$(date +"%s")
 for i in ${DEVICES//,/ }
 do
 	build ${i} -oldcam
-
-	build ${i} -newcam
 done
 
 send_msg "⏳ Start building Overclock version | DEVICES: whyred - tulip"
@@ -36,8 +34,6 @@ do
 	if [ $i == "whyred" ] || [ $i == "tulip" ]
 	then
 		build ${i} -oldcam -overclock
-
-		build ${i} -newcam -overclock
 	fi
 done
 
