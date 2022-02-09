@@ -2,11 +2,11 @@
 
 export KERNELNAME=Super
 
-export LOCALVERSION=Ryzen-V15
+export LOCALVERSION=Ryzen-V15-EOL
 
 export KBUILD_BUILD_USER=TianWalkzzMiku
 
-export KBUILD_BUILD_HOST=NakanoMiku
+export KBUILD_BUILD_HOST=sdm660_builder@Whyred_Sangar
 
 export TOOLCHAIN=clang
 
