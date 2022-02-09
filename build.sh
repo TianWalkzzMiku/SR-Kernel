@@ -6,7 +6,7 @@ export LOCALVERSION=Ryzen-V15-EOL
 
 export KBUILD_BUILD_USER=TianWalkzzMiku
 
-export KBUILD_BUILD_HOST=sdm660_builder@Whyred_Sangar
+export KBUILD_BUILD_HOST=NakanoMiku
 
 export TOOLCHAIN=clang
 
