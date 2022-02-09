@@ -710,7 +710,7 @@
 				qcom,wf-play-rate-us = <4000>;
 				qcom,lra-auto-resonance-disable;
                          };
-                         /* THUD */
+                                /* THUD */
 				qcom,effect-id = <3>;
 				qcom,wf-vmax-mv = <3600>;
 				qcom,wf-pattern = [7e 7e 7e];
