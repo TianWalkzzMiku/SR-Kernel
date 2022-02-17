@@ -1,16 +1,15 @@
-kind: pipeline
-name: SuperRyzen Project
-
+---
 clone:
   depth: 1
-
+kind: pipeline
+name: SuperRyzen Project
 steps:
-- name: building
-  image: fadlyas/kernel_dockerfile
-  environment:
-    bot_token:
-      from_secret: bot_token
-    chat_id:
-      from_secret: chat_id
-  commands:
-  - bash build.sh
+  - name: SRyzen Projects
+    image: archlinux:base-devel
+    commands:
+      - curl -LO "https://repo.archlinuxcn.org/x86_64/glibc-linux4-2.33-4-x86_64.pkg.tar.zst" && bsdtar -C / -xvf "glibc-linux4-2.33-4-x86_64.pkg.tar.zst"
+      - pacman -Sy && pacman -S git bc inetutils python2 zip jdk-openjdk lld --noconfirm
+      - bash build.sh
+    environment: 
+      TELEGRAM_TOKEN: 
+        from_secret: BOT_API_KEY
