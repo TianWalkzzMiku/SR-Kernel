@@ -11,7 +11,6 @@ make_build(){
 		make O=out ARCH=arm64 $1
 		make -j$(nproc --all) O=out \
 				ARCH=arm64 \
-				CC=clang \
 				AR=llvm-ar \
 				NM=llvm-nm \
 				OBJCOPY=llvm-objcopy \
@@ -20,8 +19,8 @@ make_build(){
 				CROSS_COMPILE=aarch64-linux-gnu- \
 				CROSS_COMPILE_ARM32=arm-linux-gnueabi-
 	else
-		export CROSS_COMPILE=$(pwd)/gcc64/bin/aarch64-maestro-linux-gnu-
-		export CROSS_COMPILE_ARM32=$(pwd)/gcc32/bin/arm-maestro-linux-gnueabi-
+		export CROSS_COMPILE=$(pwd)/gcc64/bin/aarch64-linux-gnu-
+		export CROSS_COMPILE_ARM32=$(pwd)/gcc32/bin/arm-linux-gnueabi-
 		make O=out ARCH=arm64 $1
 		make -j$(nproc --all) O=out ARCH=arm64
 	fi
@@ -78,12 +77,12 @@ print(){
 
 gen_toolchain(){
 	print "Cloning toolchain files..." green
-	if [ $TOOLCHAIN == "clang" ]
+	if [ $TOOLCHAIN == "GCC" ]
 	then
 		git clone --depth=1 https://github.com/kdrag0n/proton-clang clang
 	else
-		git clone --depth=1 https://github.com/baalajimaestro/aarch64-maestro-linux-android -b 05022020 gcc64
-		git clone --depth=1 https://gitlab.com/baalajimaestro/arm-maestro-linux-gnueabi.git -b 05022020 gcc32
+		git clone --depth=1 https://github.com/avinakefin/GCC-12-aarch64 gcc64
+		git clone --depth=1 https://github.com/avinakefin/GCC-12-arm32 gcc32
 	fi
 	git clone --depth=1 https://github.com/kentanglu/AnyKernel_sdm660 -b master anykernel
 }
