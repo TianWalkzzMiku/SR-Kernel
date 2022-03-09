@@ -10,7 +10,7 @@ export KBUILD_BUILD_HOST=Whyred@Sangarr
 
 export TOOLCHAIN=clang
 
-export DEVICES=whyred,tulip,lavender
+export DEVICES=whyred
 
 source helper
 
