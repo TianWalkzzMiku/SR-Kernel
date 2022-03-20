@@ -2,7 +2,7 @@
 
 export KERNELNAME=Super
 
-export LOCALVERSION=Ryzen-V18-EOL
+export LOCALVERSION=Ryzen-V18-EOL-qti
 
 export KBUILD_BUILD_USER=TianWalkzzMiku
 
@@ -10,7 +10,7 @@ export KBUILD_BUILD_HOST=Whyred@Sangarr
 
 export TOOLCHAIN=clang
 
-export DEVICES=whyred,tulip,lavender
+export DEVICES=whyred
 
 source helper
 
@@ -24,7 +24,6 @@ for i in ${DEVICES//,/ }
 do
 	build ${i} -oldcam
 
-	build ${i} -newcam
 done
 
 send_msg "⏳ Start building Overclock version | DEVICES: whyred - tulip"
@@ -37,7 +36,6 @@ do
 	then
 		build ${i} -oldcam -overclock
 
-		build ${i} -newcam -overclock
 	fi
 done
 
