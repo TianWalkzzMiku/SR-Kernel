@@ -40,14 +40,7 @@
 #ifdef CONFIG_DYNAMIC_STUNE_BOOST
 extern bool dsb_boosting;
 #endif
-
-/*  The same as schedtune_task_boost except assuming the caller has the rcu read
- *  lock.
- */
-int schedtune_task_boost_rcu_locked(struct task_struct *p)
-{
-	return 0;
-}
+extern int schedtune_task_boost_rcu_locked(struct task_struct *tsk);
 
 /*
  * Targeted preemption latency for CPU-bound tasks:
