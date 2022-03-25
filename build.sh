@@ -2,7 +2,7 @@
 
 export KERNELNAME=Super
 
-export LOCALVERSION=Ryzen-V18-EOL
+export LOCALVERSION=Ryzen-V19-EOL
 
 export KBUILD_BUILD_USER=TianWalkzzMiku
 
