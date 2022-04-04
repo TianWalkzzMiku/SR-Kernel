@@ -785,8 +785,11 @@ struct st_data {
 static void write_default_values(struct cgroup_subsys_state *css)
 {
 	static struct st_data st_targets[] = {
-		{ "top-app",	1, 1, 1 },
-		{ "foreground",	0, 1, 0 }
+		{ "audio-app",  0, 0, 0 },
+		{ "background", 0, 0, 0 },
+		{ "foreground", 0, 1, 0 },
+		{ "rt",         0, 0, 0 },
+                { "top-app",	1, 1, 1 }
 	};
 	int i;
 
@@ -795,7 +798,7 @@ static void write_default_values(struct cgroup_subsys_state *css)
 
 		if (!strcmp(css->cgroup->kn->name, tgt.name)) {
 			pr_info("stune_assist: setting values for %s: boost=%d prefer_idle=%d sched_boost=%d\n",
-				tgt.name, tgt.boost, tgt.prefer_idle);
+				tgt.name, tgt.boost, tgt.prefer_idle, tgt.sched_boost);
 
 			boost_write(css, NULL, tgt.boost);
 			prefer_idle_write(css, NULL, tgt.prefer_idle);
