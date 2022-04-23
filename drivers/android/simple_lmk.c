@@ -10,7 +10,6 @@
 #include <linux/moduleparam.h>
 #include <linux/oom.h>
 #include <linux/sort.h>
-#include <linux/vmpressure.h>
 
 /* The minimum number of pages to free per reclaim */
 #define MIN_FREE_PAGES (CONFIG_ANDROID_SIMPLE_LMK_MINFREE * SZ_1M / PAGE_SIZE)
@@ -53,7 +52,7 @@ static int nr_victims;
 static atomic_t needs_reclaim = ATOMIC_INIT(0);
 static atomic_t nr_killed = ATOMIC_INIT(0);
 
-static int victim_size_cmp(const void *lhs_ptr, const void *rhs_ptr)
+static int victim_cmp(const void *lhs_ptr, const void *rhs_ptr)
 {
 	const struct victim_info *lhs = (typeof(lhs))lhs_ptr;
 	const struct victim_info *rhs = (typeof(rhs))rhs_ptr;
@@ -136,7 +135,7 @@ static unsigned long find_victims(int *vindex, unsigned short target_adj_min,
 	 */
 	if (pages_found)
 		sort(&victims[old_vindex], *vindex - old_vindex,
-		     sizeof(*victims), victim_size_cmp, NULL);
+		     sizeof(*victims), victim_cmp, NULL);
 
 	return pages_found;
 }
@@ -186,18 +185,25 @@ static void scan_and_kill(unsigned long pages_needed)
 		return;
 	}
 
-	/* First round of victim processing to weed out unneeded victims */
-	nr_to_kill = process_victims(nr_found, pages_needed);
+	/* Minimize the number of victims if we found more pages than needed */
+	if (pages_found > MIN_FREE_PAGES) {
+		/* First round of processing to weed out unneeded victims */
+		nr_to_kill = process_victims(nr_found, pages_needed);
 
-	/*
-	 * Try to kill as few of the chosen victims as possible by sorting the
-	 * chosen victims by size, which means larger victims that have a lower
-	 * adj can be killed in place of smaller victims with a high adj.
-	 */
-	sort(victims, nr_to_kill, sizeof(*victims), victim_size_cmp, NULL);
+		/*
+		 * Try to kill as few of the chosen victims as possible by
+		 * sorting the chosen victims by size, which means larger
+		 * victims that have a lower adj can be killed in place of
+		 * smaller victims with a high adj.
+		 */
+		sort(victims, nr_to_kill, sizeof(*victims), victim_cmp, NULL);
 
-	/* Second round of victim processing to finally select the victims */
-	nr_to_kill = process_victims(nr_to_kill, pages_needed);
+		/* Second round of processing to finally select the victims */
+		nr_to_kill = process_victims(nr_to_kill, pages_needed);
+	} else {
+		/* Too few pages found, so all the victims need to be killed */
+		nr_to_kill = nr_found;
+	}
 
 	/* Store the final number of victims for simple_lmk_mm_freed() */
 	write_lock(&mm_free_lock);
@@ -234,10 +240,7 @@ static void scan_and_kill(unsigned long pages_needed)
 	}
 
 	/* Wait until all the victims die or until the timeout is reached */
-	if (!wait_for_completion_timeout(&reclaim_done, RECLAIM_EXPIRES))
-		pr_info("Timeout hit waiting for victims to die, proceeding\n");
-
-	/* Clean up for future reclaim invocations */
+	wait_for_completion_timeout(&reclaim_done, RECLAIM_EXPIRES);
 	write_lock(&mm_free_lock);
 	reinit_completion(&reclaim_done);
 	nr_victims = 0;
@@ -262,6 +265,13 @@ static int simple_lmk_reclaim_thread(void *data)
 	return 0;
 }
 
+void simple_lmk_decide_reclaim(int kswapd_priority)
+{
+	if (kswapd_priority == CONFIG_ANDROID_SIMPLE_LMK_AGGRESSION &&
+	    !atomic_cmpxchg_acquire(&needs_reclaim, 0, 1))
+		wake_up(&oom_waitq);
+}
+
 void simple_lmk_mm_freed(struct mm_struct *mm)
 {
 	int i;
@@ -281,20 +291,6 @@ void simple_lmk_mm_freed(struct mm_struct *mm)
 	read_unlock(&mm_free_lock);
 }
 
-static int simple_lmk_vmpressure_cb(struct notifier_block *nb,
-				    unsigned long pressure, void *data)
-{
-	if (pressure == 100 && !atomic_cmpxchg_acquire(&needs_reclaim, 0, 1))
-		wake_up(&oom_waitq);
-
-	return NOTIFY_OK;
-}
-
-static struct notifier_block vmpressure_notif = {
-	.notifier_call = simple_lmk_vmpressure_cb,
-	.priority = INT_MAX
-};
-
 /* Initialize Simple LMK when lmkd in Android writes to the minfree parameter */
 static int simple_lmk_init_set(const char *val, const struct kernel_param *kp)
 {
@@ -302,12 +298,10 @@ static int simple_lmk_init_set(const char *val, const struct kernel_param *kp)
 	struct task_struct *thread;
 
 	if (!atomic_cmpxchg(&init_done, 0, 1)) {
-		thread = kthread_run(simple_lmk_reclaim_thread, NULL,
-				     "simple_lmkd");
+		thread = kthread_run_perf_critical(simple_lmk_reclaim_thread,
+						   NULL, "simple_lmkd");
 		BUG_ON(IS_ERR(thread));
-		BUG_ON(vmpressure_notifier_register(&vmpressure_notif));
 	}
-
 	return 0;
 }
 
