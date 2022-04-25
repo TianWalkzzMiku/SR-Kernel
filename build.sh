@@ -2,11 +2,11 @@
 
 export KERNELNAME=Super
 
-export LOCALVERSION=Ryzen-V19-EOL
+export LOCALVERSION=Ryzen-V20-EOL
 
-export KBUILD_BUILD_USER=TianWalkzzMiku
+export KBUILD_BUILD_USER=Tiannn-
 
-export KBUILD_BUILD_HOST=Whyred@Sangarr
+export KBUILD_BUILD_HOST=ServerCI
 
 export TOOLCHAIN=clang
 
