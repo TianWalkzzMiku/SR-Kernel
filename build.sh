@@ -4,9 +4,9 @@ export KERNELNAME=Super
 
 export LOCALVERSION=Ryzen-V20-EOL
 
-export KBUILD_BUILD_USER=Tiannn-
+export KBUILD_BUILD_USER=Tiannn
 
-export KBUILD_BUILD_HOST=ServerCI
+export KBUILD_BUILD_HOST=Mob_Psycho
 
 export TOOLCHAIN=clang
 
