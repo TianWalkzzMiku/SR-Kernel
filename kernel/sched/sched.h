@@ -1786,17 +1786,13 @@ static inline void sched_rt_avg_update(struct rq *rq, u64 rt_delta) { }
 static inline void sched_avg_update(struct rq *rq) { }
 #endif
 
-struct rq_flags {
-	unsigned long flags;
-};
-
-struct rq *__task_rq_lock(struct task_struct *p, struct rq_flags *rf)
+struct rq *__task_rq_lock(struct task_struct *p)
 	__acquires(rq->lock);
-struct rq *task_rq_lock(struct task_struct *p, struct rq_flags *rf)
+struct rq *task_rq_lock(struct task_struct *p, unsigned long *flags)
 	__acquires(p->pi_lock)
 	__acquires(rq->lock);
 
-static inline void __task_rq_unlock(struct rq *rq, struct rq_flags *rf)
+static inline void __task_rq_unlock(struct rq *rq)
 	__releases(rq->lock)
 {
 	lockdep_unpin_lock(&rq->lock);
@@ -1804,13 +1800,13 @@ static inline void __task_rq_unlock(struct rq *rq, struct rq_flags *rf)
 }
 
 static inline void
-task_rq_unlock(struct rq *rq, struct task_struct *p, struct rq_flags *rf)
+task_rq_unlock(struct rq *rq, struct task_struct *p, unsigned long *flags)
 	__releases(rq->lock)
 	__releases(p->pi_lock)
 {
 	lockdep_unpin_lock(&rq->lock);
 	raw_spin_unlock(&rq->lock);
-	raw_spin_unlock_irqrestore(&p->pi_lock, rf->flags);
+	raw_spin_unlock_irqrestore(&p->pi_lock, *flags);
 }
 
 extern struct rq *lock_rq_of(struct task_struct *p, unsigned long *flags);

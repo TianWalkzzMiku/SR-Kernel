@@ -693,10 +693,10 @@ static enum hrtimer_restart dl_task_timer(struct hrtimer *timer)
 						     struct sched_dl_entity,
 						     dl_timer);
 	struct task_struct *p = dl_task_of(dl_se);
-	struct rq_flags rf;
+	unsigned long flags;
 	struct rq *rq;
 
-	rq = task_rq_lock(p, &rf);
+	rq = task_rq_lock(p, &flags);
 
 	/*
 	 * The task might have changed its scheduling policy to something
@@ -789,7 +789,7 @@ static enum hrtimer_restart dl_task_timer(struct hrtimer *timer)
 #endif
 
 unlock:
-	task_rq_unlock(rq, p, &rf);
+	task_rq_unlock(rq, p, &flags);
 
 	/*
 	 * This can free the task_struct, including this hrtimer, do not touch
