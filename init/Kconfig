@@ -943,10 +943,6 @@ config PELT_HALFLIFE_8
 
 endchoice
 
-endmenu # Scheduler features"
-
-menu "Scheduler features"
-
 config UCLAMP_TASK
 	bool "Enable utilization clamping for RT/FAIR tasks"
 	depends on CPU_FREQ_GOV_SCHEDUTIL
@@ -996,28 +992,7 @@ config UCLAMP_BUCKETS_COUNT
 
 	  If in doubt, use the default value.
 
-config UCLAMP_DEFAULT_MIN_RT
-	int "default uclamp util rt"
-	depends on UCLAMP_TASK
-	default 0
-	help
-	 This sets the UCLAMP_RT_DEFAULT value.
-
-config UCLAMP_DEFAULT_MAX
-	int "default uclam max"
-	depends on UCLAMP_TASK
-	default 0
-	help
-	 This sets the UCLAMP_MAX value.
-
-config UCLAMP_DEFAULT_MIN
-	int "default uclam min"
-	depends on UCLAMP_TASK
-	default 0
-	help
-	 This sets the UCLAMP_MIN value.
-
-endmenu
+endmenu # Scheduler features"
 
 #
 # For architectures that want to enable the support for NUMA-affine scheduler
